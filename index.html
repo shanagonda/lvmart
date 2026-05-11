@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LV Mart | Laxmi Vinayaka Kiranam & General Stores</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+  :root {
+    --gold: #C8921A;
+    --gold-light: #F5D78E;
+    --gold-dark: #7A5700;
+    --navy: #0F2748;
+    --navy-light: #1A3A6B;
+    --cream: #FBF7EE;
+    --cream-dark: #F0E8D0;
+    --green: #1A6B3A;
+    --green-light: #E8F5EE;
+    --red: #B91C1C;
+    --white: #ffffff;
+    --gray: #6B7280;
+    --gray-light: #F3F4F6;
+    --shadow: 0 4px 24px rgba(15,39,72,0.10);
+    --radius: 16px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--navy); min-height: 100vh; }
+
+  /* ===== PAGES ===== */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ===== NAVBAR ===== */
+  nav {
+    background: var(--navy);
+    padding: 0 24px;
+    position: sticky; top: 0; z-index: 200;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+    box-shadow: 0 2px 16px rgba(15,39,72,0.18);
+  }
+  .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .nav-logo {
+    width: 38px; height: 38px; background: var(--gold);
+    border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 800; color: var(--navy);
+  }
+  .nav-title { color: white; font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 600; line-height: 1.1; }
+  .nav-sub { color: var(--gold-light); font-size: 10px; letter-spacing: 0.04em; }
+  .nav-right { display: flex; gap: 8px; align-items: center; }
+  .cart-btn {
+    background: var(--gold); color: var(--navy); border: none; border-radius: 12px;
+    padding: 8px 18px; font-weight: 600; font-size: 14px; cursor: pointer;
+    display: flex; align-items: center; gap: 8px; transition: all 0.2s;
+  }
+  .cart-btn:hover { background: var(--gold-light); }
+  .cart-badge {
+    background: var(--red); color: white; border-radius: 50%; font-size: 11px;
+    width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-weight: 700;
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    padding: 48px 24px 56px;
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(200,146,26,0.18) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero::after {
+    content: '';
+    position: absolute; bottom: -80px; left: -40px;
+    width: 220px; height: 220px;
+    background: radial-gradient(circle, rgba(200,146,26,0.10) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero-badge {
+    display: inline-block; background: rgba(200,146,26,0.18); color: var(--gold-light);
+    border: 1px solid rgba(200,146,26,0.35); border-radius: 50px; padding: 5px 16px;
+    font-size: 12px; letter-spacing: 0.08em; margin-bottom: 16px; font-weight: 500;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif; font-size: clamp(26px, 5vw, 44px);
+    font-weight: 800; color: white; margin-bottom: 10px; line-height: 1.15;
+  }
+  .hero h1 span { color: var(--gold-light); }
+  .hero-sub { color: rgba(255,255,255,0.65); font-size: 15px; margin-bottom: 24px; max-width: 480px; margin-left: auto; margin-right: auto; }
+  .hero-chips { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .hero-chip {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.85); border-radius: 50px; padding: 6px 14px; font-size: 12px;
+    display: flex; align-items: center; gap: 5px;
+  }
+
+  /* ===== CATEGORIES / FILTER ===== */
+  .filter-bar {
+    background: white; padding: 0 24px;
+    display: flex; gap: 8px; overflow-x: auto; align-items: center;
+    height: 56px; box-shadow: 0 2px 8px rgba(15,39,72,0.06);
+    position: sticky; top: 64px; z-index: 100;
+  }
+  .filter-bar::-webkit-scrollbar { display: none; }
+  .filter-btn {
+    padding: 6px 16px; border-radius: 50px; font-size: 13px; font-weight: 500;
+    border: 1.5px solid #e0d9cc; background: none; cursor: pointer; white-space: nowrap;
+    color: var(--navy); transition: all 0.15s;
+  }
+  .filter-btn.active { background: var(--navy); color: white; border-color: var(--navy); }
+  .filter-btn:hover:not(.active) { border-color: var(--navy); }
+
+  /* ===== PRODUCTS ===== */
+  .products-section { padding: 28px 20px 100px; max-width: 1100px; margin: 0 auto; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--navy); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: var(--cream-dark); }
+  .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 18px; }
+
+  .product-card {
+    background: white; border-radius: var(--radius); padding: 20px;
+    border: 1.5px solid var(--cream-dark); transition: all 0.2s;
+    display: flex; flex-direction: column; gap: 10px;
+    position: relative; overflow: hidden;
+  }
+  .product-card:hover { border-color: var(--gold); box-shadow: 0 8px 32px rgba(200,146,26,0.12); transform: translateY(-2px); }
+  .product-card.out-of-stock { opacity: 0.55; }
+  .stock-badge {
+    position: absolute; top: 12px; right: 12px;
+    font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 50px;
+  }
+  .stock-badge.in { background: var(--green-light); color: var(--green); }
+  .stock-badge.out { background: #FEE2E2; color: var(--red); }
+  .product-icon { font-size: 42px; line-height: 1; margin-bottom: 4px; }
+  .product-category { font-size: 11px; color: var(--gray); letter-spacing: 0.06em; font-weight: 500; text-transform: uppercase; }
+  .product-name { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 600; color: var(--navy); line-height: 1.3; }
+  .product-weight { font-size: 12px; color: var(--gray); }
+  .product-price { font-size: 22px; font-weight: 700; color: var(--gold-dark); font-family: 'Playfair Display', serif; }
+  .product-price small { font-size: 13px; font-weight: 400; color: var(--gray); font-family: 'DM Sans', sans-serif; }
+  .add-btn {
+    width: 100%; padding: 10px; border-radius: 10px;
+    background: var(--navy); color: white; border: none; font-size: 14px; font-weight: 600;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px;
+    transition: all 0.15s; margin-top: auto;
+  }
+  .add-btn:hover:not(:disabled) { background: var(--navy-light); }
+  .add-btn:disabled { background: #d1d5db; cursor: not-allowed; }
+  .qty-ctrl {
+    display: flex; align-items: center; gap: 8px; width: 100%;
+    background: var(--gray-light); border-radius: 10px; padding: 6px 10px;
+  }
+  .qty-ctrl button {
+    width: 28px; height: 28px; border-radius: 8px; border: none;
+    background: white; font-size: 16px; font-weight: 700; cursor: pointer;
+    color: var(--navy); display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  }
+  .qty-ctrl span { flex: 1; text-align: center; font-weight: 700; font-size: 15px; }
+
+  /* ===== CART DRAWER ===== */
+  .cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 300; display: none; }
+  .cart-overlay.open { display: block; }
+  .cart-drawer {
+    position: fixed; right: -100%; top: 0; height: 100%; width: min(420px, 100vw);
+    background: white; z-index: 301; transition: right 0.3s cubic-bezier(.4,0,.2,1);
+    display: flex; flex-direction: column; box-shadow: -8px 0 48px rgba(15,39,72,0.18);
+  }
+  .cart-drawer.open { right: 0; }
+  .cart-head { background: var(--navy); color: white; padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; }
+  .cart-head h3 { font-family: 'Playfair Display', serif; font-size: 20px; }
+  .cart-close { background: rgba(255,255,255,0.15); border: none; color: white; width: 32px; height: 32px; border-radius: 8px; font-size: 18px; cursor: pointer; }
+  .cart-body { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+  .cart-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 16px; color: var(--gray); }
+  .cart-empty i { font-size: 48px; opacity: 0.3; }
+  .cart-item {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--cream); border-radius: 12px; padding: 12px;
+    border: 1px solid var(--cream-dark);
+  }
+  .cart-item-icon { font-size: 28px; width: 44px; text-align: center; flex-shrink: 0; }
+  .cart-item-info { flex: 1; }
+  .cart-item-name { font-size: 13px; font-weight: 600; color: var(--navy); line-height: 1.3; }
+  .cart-item-price { font-size: 12px; color: var(--gray); }
+  .cart-item-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+  .cart-item-total { font-weight: 700; color: var(--gold-dark); font-size: 14px; }
+  .cart-item-qty { display: flex; align-items: center; gap: 6px; }
+  .cart-item-qty button {
+    width: 24px; height: 24px; border-radius: 6px; border: 1.5px solid var(--cream-dark);
+    background: white; font-size: 14px; cursor: pointer; color: var(--navy);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .cart-item-qty span { font-size: 13px; font-weight: 700; min-width: 18px; text-align: center; }
+  .cart-foot { padding: 16px 20px; border-top: 1.5px solid var(--cream-dark); background: white; }
+  .cart-total-row { display: flex; justify-content: space-between; margin-bottom: 14px; font-size: 18px; font-weight: 700; color: var(--navy); }
+  .cart-total-row span:last-child { color: var(--gold-dark); font-family: 'Playfair Display', serif; }
+  .wa-btn {
+    width: 100%; padding: 14px; border-radius: 12px;
+    background: #25D366; color: white; border: none; font-size: 16px; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+    transition: background 0.15s;
+  }
+  .wa-btn:hover { background: #1ab355; }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: var(--navy); color: rgba(255,255,255,0.75); padding: 40px 24px 24px;
+    text-align: center;
+  }
+  footer .f-logo { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--gold-light); margin-bottom: 10px; }
+  footer p { font-size: 13px; line-height: 1.8; }
+  footer a { color: var(--gold-light); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+  footer .f-map-btn {
+    display: inline-flex; align-items: center; gap: 7px; margin-top: 14px;
+    background: rgba(200,146,26,0.18); border: 1px solid rgba(200,146,26,0.4);
+    color: var(--gold-light); padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none;
+  }
+  footer .f-map-btn:hover { background: rgba(200,146,26,0.28); }
+  .divider { border: none; border-top: 1px solid rgba(255,255,255,0.08); margin: 20px 0; }
+
+  /* ===== ADMIN LOGIN PAGE ===== */
+  .admin-login-page {
+    min-height: 100vh; background: var(--navy);
+    display: flex; align-items: center; justify-content: center; padding: 24px;
+  }
+  .login-box {
+    background: white; border-radius: 20px; padding: 40px 36px;
+    width: 100%; max-width: 380px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  .login-box h2 { font-family: 'Playfair Display', serif; font-size: 26px; margin-bottom: 6px; color: var(--navy); }
+  .login-box .sub { font-size: 13px; color: var(--gray); margin-bottom: 28px; }
+  .form-group { margin-bottom: 16px; }
+  .form-group label { font-size: 13px; font-weight: 600; color: var(--navy); display: block; margin-bottom: 6px; }
+  .form-group input {
+    width: 100%; border: 1.5px solid #e0d9cc; border-radius: 10px; padding: 10px 14px;
+    font-size: 14px; font-family: 'DM Sans', sans-serif; outline: none; color: var(--navy);
+  }
+  .form-group input:focus { border-color: var(--navy); }
+  .login-btn {
+    width: 100%; padding: 12px; background: var(--navy); color: white;
+    border: none; border-radius: 10px; font-size: 15px; font-weight: 700;
+    cursor: pointer; transition: background 0.15s; margin-top: 8px;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .login-btn:hover { background: var(--navy-light); }
+  .login-err { color: var(--red); font-size: 13px; margin-top: 10px; display: none; }
+
+  /* ===== ADMIN DASHBOARD ===== */
+  .admin-page { min-height: 100vh; background: #F8F7F4; }
+  .admin-nav {
+    background: var(--navy); padding: 0 24px; height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  }
+  .admin-nav h1 { font-family: 'Playfair Display', serif; font-size: 18px; color: white; }
+  .admin-nav .admin-sub { font-size: 11px; color: var(--gold-light); letter-spacing: 0.05em; }
+  .logout-btn {
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    color: white; padding: 7px 16px; border-radius: 8px; font-size: 13px; cursor: pointer;
+    display: flex; align-items: center; gap: 7px; transition: background 0.15s;
+  }
+  .logout-btn:hover { background: rgba(255,255,255,0.18); }
+  .admin-body { max-width: 1100px; margin: 0 auto; padding: 28px 20px; }
+  .admin-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 28px; }
+  .stat-card { background: white; border-radius: 14px; padding: 18px 20px; border: 1.5px solid var(--cream-dark); }
+  .stat-label { font-size: 12px; color: var(--gray); font-weight: 500; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .stat-val { font-size: 28px; font-weight: 700; font-family: 'Playfair Display', serif; color: var(--navy); }
+  .stat-val.gold { color: var(--gold-dark); }
+  .stat-val.green { color: var(--green); }
+  .admin-tools { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+  .tool-btn {
+    padding: 9px 18px; border-radius: 10px; font-size: 13px; font-weight: 600;
+    cursor: pointer; display: flex; align-items: center; gap: 7px; border: none; transition: all 0.15s;
+  }
+  .tool-btn.primary { background: var(--navy); color: white; }
+  .tool-btn.primary:hover { background: var(--navy-light); }
+  .tool-btn.success { background: var(--green); color: white; }
+  .tool-btn.success:hover { background: #145C30; }
+  .admin-table-wrap { background: white; border-radius: 16px; border: 1.5px solid var(--cream-dark); overflow: hidden; }
+  .admin-table { width: 100%; border-collapse: collapse; }
+  .admin-table th { background: var(--cream); font-size: 12px; font-weight: 600; color: var(--gray); text-transform: uppercase; letter-spacing: 0.06em; padding: 12px 16px; text-align: left; border-bottom: 1.5px solid var(--cream-dark); }
+  .admin-table td { padding: 13px 16px; border-bottom: 1px solid var(--cream-dark); font-size: 14px; vertical-align: middle; }
+  .admin-table tr:last-child td { border-bottom: none; }
+  .admin-table tr:hover td { background: var(--cream); }
+  .td-icon { font-size: 24px; }
+  .td-name { font-weight: 600; color: var(--navy); }
+  .td-cat { font-size: 12px; color: var(--gray); margin-top: 2px; }
+  .td-price { font-weight: 700; color: var(--gold-dark); font-family: 'Playfair Display', serif; font-size: 16px; }
+  .td-actions { display: flex; gap: 8px; }
+  .action-btn {
+    padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer;
+    border: 1.5px solid; transition: all 0.15s; display: flex; align-items: center; gap: 5px;
+  }
+  .action-btn.edit { border-color: var(--navy); color: var(--navy); background: none; }
+  .action-btn.edit:hover { background: var(--navy); color: white; }
+  .action-btn.del { border-color: var(--red); color: var(--red); background: none; }
+  .action-btn.del:hover { background: var(--red); color: white; }
+  .toggle-stock { display: flex; align-items: center; }
+  .switch { position: relative; display: inline-block; width: 40px; height: 22px; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider-sw { position: absolute; cursor: pointer; inset: 0; background: #d1d5db; border-radius: 50px; transition: 0.2s; }
+  .slider-sw::before { content:''; position: absolute; height: 16px; width: 16px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.2s; }
+  input:checked + .slider-sw { background: var(--green); }
+  input:checked + .slider-sw::before { transform: translateX(18px); }
+
+  /* ===== MODAL ===== */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 500; display: none; align-items: center; justify-content: center; padding: 20px; }
+  .modal-overlay.open { display: flex; }
+  .modal-box { background: white; border-radius: 20px; padding: 32px; width: 100%; max-width: 440px; box-shadow: 0 20px 60px rgba(0,0,0,0.25); }
+  .modal-box h3 { font-family: 'Playfair Display', serif; font-size: 22px; margin-bottom: 20px; color: var(--navy); }
+  .modal-grid { display: grid; gap: 14px; }
+  .modal-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .mfield label { font-size: 12px; font-weight: 600; color: var(--gray); display: block; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .mfield input, .mfield select {
+    width: 100%; border: 1.5px solid #e0d9cc; border-radius: 10px; padding: 9px 12px;
+    font-size: 14px; font-family: 'DM Sans', sans-serif; outline: none; color: var(--navy);
+  }
+  .mfield input:focus, .mfield select:focus { border-color: var(--navy); }
+  .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+  .modal-actions button { flex: 1; padding: 11px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; font-family: 'DM Sans', sans-serif; }
+  .modal-actions .save-btn { background: var(--navy); color: white; }
+  .modal-actions .save-btn:hover { background: var(--navy-light); }
+  .modal-actions .cancel-btn { background: var(--gray-light); color: var(--navy); }
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--navy); color: white; padding: 12px 24px; border-radius: 12px; font-size: 14px; font-weight: 500; z-index: 999; transition: transform 0.3s; box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ===== MISC ===== */
+  .no-results { text-align: center; padding: 60px 20px; color: var(--gray); }
+  .no-results i { font-size: 48px; display: block; margin-bottom: 16px; opacity: 0.3; }
+
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 24px; }
+    .product-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+    .admin-table th:nth-child(3), .admin-table td:nth-child(3) { display: none; }
+    .modal-row { grid-template-columns: 1fr; }
+  }
+
+  /* Promo banner */
+  .promo-banner {
+    background: var(--gold); text-align: center; padding: 9px 16px;
+    font-size: 13px; font-weight: 600; color: var(--navy); display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== SHOP PAGE ==================== -->
+<div id="shop-page" class="page active">
+  <div class="promo-banner">
+    🌾 <span>New Rice Stock Available Now! Fresh Quality Grains</span>
+    <span style="opacity:0.5">·</span>
+    📞 <a href="tel:+919177547120" style="color:var(--navy);text-decoration:none;">+91 91775 47120</a>
+  </div>
+
+  <nav>
+    <a href="#" class="nav-brand" onclick="return false">
+      <div class="nav-logo">LV</div>
+      <div>
+        <div class="nav-title">LV Mart</div>
+        <div class="nav-sub">LAXMI VINAYAKA KIRANAM</div>
+      </div>
+    </a>
+    <div class="nav-right">
+      <button class="cart-btn" onclick="toggleCart()">
+        <i class="fas fa-shopping-cart"></i> Cart
+        <span class="cart-badge" id="cart-count">0</span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <div class="hero-badge">🏪 &nbsp; Your Trusted Local Store</div>
+    <h1>Laxmi Vinayaka<br><span>Kiranam & General Stores</span></h1>
+    <p class="hero-sub">Fresh groceries, daily essentials & quality goods — right in your neighborhood in Mandamarri, Telangana</p>
+    <div class="hero-chips">
+      <span class="hero-chip"><i class="fas fa-map-marker-alt"></i> Near Hanuman Temple, Mandamarri Market</span>
+      <span class="hero-chip"><i class="fab fa-whatsapp"></i> Order via WhatsApp</span>
+      <span class="hero-chip"><i class="fas fa-clock"></i> Open Daily</span>
+    </div>
+  </div>
+
+  <div class="filter-bar" id="filter-bar">
+    <button class="filter-btn active" onclick="filterCat('All', this)">All Items</button>
+  </div>
+
+  <div class="products-section">
+    <div class="section-title" id="section-title-text">All Products</div>
+    <div id="product-grid" class="product-grid"></div>
+    <div id="no-results" class="no-results" style="display:none">
+      <i class="fas fa-box-open"></i>
+      <p>No products found in this category</p>
+    </div>
+  </div>
+
+  <footer>
+    <div class="f-logo">LV Mart</div>
+    <p>
+      Laxmi Vinayaka Kiranam & General Stores<br>
+      Near Hanuman Temple, Mandamarri Market,<br>Mandamarri, Telangana 504231
+    </p>
+    <p style="margin-top:10px">
+      📞 <a href="tel:+919177547120">+91 91775 47120</a> &nbsp;|&nbsp;
+      <a href="https://wa.me/919177547120">WhatsApp Us</a>
+    </p>
+    <a href="https://maps.app.goo.gl/LD5roTA4pdSoapG69/" target="_blank" class="f-map-btn">
+      <i class="fas fa-map-marker-alt"></i> View on Google Maps
+    </a>
+    <hr class="divider">
+    <p style="font-size:12px;opacity:0.5">© 2025 LV Mart · All Rights Reserved</p>
+  </footer>
+</div>
+
+<!-- Cart Overlay & Drawer -->
+<div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+<div class="cart-drawer" id="cart-drawer">
+  <div class="cart-head">
+    <h3><i class="fas fa-shopping-cart" style="margin-right:8px"></i>Your Cart</h3>
+    <button class="cart-close" onclick="toggleCart()">×</button>
+  </div>
+  <div class="cart-body" id="cart-body"></div>
+  <div class="cart-foot" id="cart-foot" style="display:none">
+    <div class="cart-total-row">
+      <span>Total</span><span id="cart-total">₹0</span>
+    </div>
+    <button class="wa-btn" onclick="sendToWhatsApp()">
+      <i class="fab fa-whatsapp" style="font-size:20px"></i> Order via WhatsApp
+    </button>
+  </div>
+</div>
+
+<!-- ==================== ADMIN LOGIN PAGE ==================== -->
+<div id="admin-login-page" class="page">
+  <div class="admin-login-page">
+    <div class="login-box">
+      <div style="font-family:'Playfair Display',serif;font-size:14px;color:var(--gold-dark);letter-spacing:0.1em;margin-bottom:10px;font-weight:600">LV MART ADMIN</div>
+      <h2>Owner Login</h2>
+      <p class="sub">Sign in to manage products & pricing</p>
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="login-user" placeholder="Enter username" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="login-pass" placeholder="Enter password">
+      </div>
+      <button class="login-btn" onclick="doLogin()">Sign In →</button>
+      <div class="login-err" id="login-err"><i class="fas fa-exclamation-circle"></i> Incorrect username or password.</div>
+      <div style="margin-top:20px;text-align:center">
+        <a href="#" onclick="showPage('shop-page');return false" style="font-size:13px;color:var(--gray)">← Back to Shop</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== ADMIN DASHBOARD ==================== -->
+<div id="admin-page" class="page">
+  <div class="admin-page">
+    <div class="admin-nav">
+      <div>
+        <div class="admin-nav h1" style="font-family:'Playfair Display',serif;font-size:18px;color:white">LV Mart — Admin Dashboard</div>
+        <div class="admin-sub">Manage your products & inventory</div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <button class="logout-btn" onclick="showPage('shop-page')">
+          <i class="fas fa-store"></i> View Shop
+        </button>
+        <button class="logout-btn" onclick="doLogout()">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+    </div>
+
+    <div class="admin-body">
+      <div class="admin-stats" id="admin-stats"></div>
+
+      <div class="admin-tools">
+        <button class="tool-btn primary" onclick="openModal()">
+          <i class="fas fa-plus"></i> Add New Product
+        </button>
+        <button class="tool-btn success" onclick="exportProducts()">
+          <i class="fas fa-download"></i> Export List
+        </button>
+        <a href="#" onclick="showPage('shop-page');return false" style="text-decoration:none">
+          <button class="tool-btn" style="background:white;border:1.5px solid var(--cream-dark);color:var(--navy)">
+            <i class="fas fa-eye"></i> Preview Shop
+          </button>
+        </a>
+      </div>
+
+      <div class="admin-table-wrap">
+        <table class="admin-table" id="admin-table">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Product Name</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>In Stock</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="admin-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== PRODUCT MODAL ==================== -->
+<div class="modal-overlay" id="product-modal">
+  <div class="modal-box">
+    <h3 id="modal-title">Add New Product</h3>
+    <div class="modal-grid">
+      <div class="mfield">
+        <label>Product Name</label>
+        <input type="text" id="m-name" placeholder="e.g. Sona Masoori Rice (25kg)">
+      </div>
+      <div class="modal-row">
+        <div class="mfield">
+          <label>Price (₹)</label>
+          <input type="number" id="m-price" placeholder="0">
+        </div>
+        <div class="mfield">
+          <label>Icon (emoji)</label>
+          <input type="text" id="m-icon" placeholder="🍚">
+        </div>
+      </div>
+      <div class="mfield">
+        <label>Category</label>
+        <select id="m-cat">
+          <option value="Rice & Grains">Rice & Grains</option>
+          <option value="Oils & Ghee">Oils & Ghee</option>
+          <option value="Dal & Pulses">Dal & Pulses</option>
+          <option value="Spices">Spices</option>
+          <option value="Sugar & Salt">Sugar & Salt</option>
+          <option value="Household">Household</option>
+          <option value="Snacks">Snacks</option>
+          <option value="Beverages">Beverages</option>
+          <option value="Dairy">Dairy</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="mfield" style="display:flex;align-items:center;gap:10px;flex-direction:row">
+        <label style="margin:0">In Stock</label>
+        <label class="switch">
+          <input type="checkbox" id="m-stock" checked>
+          <span class="slider-sw"></span>
+        </label>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="cancel-btn" onclick="closeModal()">Cancel</button>
+      <button class="save-btn" onclick="saveProduct()">Save Product</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ Saved successfully</div>
+
+<script>
+// ============================================================
+// DATA STORE — Persisted in localStorage
+// ============================================================
+const ADMIN_USER = 'lvmart';
+const ADMIN_PASS = 'laxmi2025';
+const STORAGE_KEY = 'lvmart_products_v1';
+
+const defaultProducts = [
+  { id: 1, name: "Premium Sona Masoori Rice", icon: "🍚", category: "Rice & Grains", price: 1350, inStock: true },
+  { id: 2, name: "Sunflower Cooking Oil (1L)", icon: "🌻", category: "Oils & Ghee", price: 145, inStock: true },
+  { id: 3, name: "Toor Dal (1kg)", icon: "🍲", category: "Dal & Pulses", price: 160, inStock: true },
+  { id: 4, name: "Chana Dal (1kg)", icon: "🟡", category: "Dal & Pulses", price: 120, inStock: true },
+  { id: 5, name: "Sugar (1kg)", icon: "🍬", category: "Sugar & Salt", price: 48, inStock: true },
+  { id: 6, name: "Iodised Salt (1kg)", icon: "🧂", category: "Sugar & Salt", price: 20, inStock: true },
+  { id: 7, name: "Turmeric Powder (100g)", icon: "🟠", category: "Spices", price: 35, inStock: true },
+  { id: 8, name: "Red Chilli Powder (100g)", icon: "🌶️", category: "Spices", price: 42, inStock: true },
+  { id: 9, name: "Palmolive Washing Soap Pack", icon: "🧼", category: "Household", price: 90, inStock: true },
+  { id: 10, name: "Rin Detergent (500g)", icon: "🫧", category: "Household", price: 60, inStock: true },
+  { id: 11, name: "Good Day Biscuits (Pack)", icon: "🍪", category: "Snacks", price: 30, inStock: true },
+  { id: 12, name: "Groundnut Oil (1L)", icon: "🥜", category: "Oils & Ghee", price: 180, inStock: true },
+];
+
+function loadProducts() {
+  try {
+    const s = localStorage.getItem(STORAGE_KEY);
+    return s ? JSON.parse(s) : defaultProducts;
+  } catch(e) { return defaultProducts; }
+}
+function saveProducts() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
+}
+
+let products = loadProducts();
+let cart = {};
+let editingId = null;
+
+// ============================================================
+// PAGE ROUTING
+// ============================================================
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// Secret admin access — click LV logo 5 times
+let logoTaps = 0, logoTimer = null;
+document.querySelector('.nav-logo')?.addEventListener('click', () => {
+  logoTaps++;
+  clearTimeout(logoTimer);
+  logoTimer = setTimeout(() => { logoTaps = 0; }, 2000);
+  if (logoTaps >= 5) { logoTaps = 0; showPage('admin-login-page'); }
+});
+
+// ============================================================
+// AUTH
+// ============================================================
+function doLogin() {
+  const u = document.getElementById('login-user').value;
+  const p = document.getElementById('login-pass').value;
+  if (u === ADMIN_USER && p === ADMIN_PASS) {
+    document.getElementById('login-err').style.display = 'none';
+    showPage('admin-page');
+    renderAdminTable();
+    renderAdminStats();
+  } else {
+    document.getElementById('login-err').style.display = 'block';
+  }
+}
+function doLogout() {
+  document.getElementById('login-user').value = '';
+  document.getElementById('login-pass').value = '';
+  showPage('shop-page');
+}
+document.getElementById('login-pass')?.addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+
+// ============================================================
+// SHOP RENDER
+// ============================================================
+function getCategories() {
+  const cats = [...new Set(products.map(p => p.category))];
+  return cats;
+}
+
+function renderFilters() {
+  const bar = document.getElementById('filter-bar');
+  const cats = getCategories();
+  bar.innerHTML = `<button class="filter-btn active" onclick="filterCat('All',this)">All Items</button>` +
+    cats.map(c => `<button class="filter-btn" onclick="filterCat('${c}',this)">${c}</button>`).join('');
+}
+
+let activeFilter = 'All';
+function filterCat(cat, btn) {
+  activeFilter = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('section-title-text').textContent = cat === 'All' ? 'All Products' : cat;
+  renderProducts();
+}
+
+function renderProducts() {
+  const grid = document.getElementById('product-grid');
+  const filtered = activeFilter === 'All' ? products : products.filter(p => p.category === activeFilter);
+  const inStock = filtered.filter(p => p.inStock);
+  const out = filtered.filter(p => !p.inStock);
+  const sorted = [...inStock, ...out];
+
+  document.getElementById('no-results').style.display = sorted.length === 0 ? 'flex' : 'none';
+  grid.style.display = sorted.length === 0 ? 'none' : 'grid';
+
+  grid.innerHTML = sorted.map(p => {
+    const qty = cart[p.id] || 0;
+    return `
+      <div class="product-card ${!p.inStock ? 'out-of-stock' : ''}" id="card-${p.id}">
+        <span class="stock-badge ${p.inStock ? 'in' : 'out'}">${p.inStock ? 'In Stock' : 'Out of Stock'}</span>
+        <div class="product-icon">${p.icon}</div>
+        <div class="product-category">${p.category}</div>
+        <div class="product-name">${p.name}</div>
+        <div class="product-price">₹${p.price.toLocaleString('en-IN')} <small>/unit</small></div>
+        <div id="ctrl-${p.id}">
+          ${qty === 0 ?
+            `<button class="add-btn" onclick="addToCart(${p.id})" ${!p.inStock ? 'disabled' : ''}><i class="fas fa-plus"></i> Add to Cart</button>` :
+            `<div class="qty-ctrl">
+              <button onclick="removeFromCart(${p.id})"><i class="fas fa-minus" style="font-size:10px"></i></button>
+              <span>${qty}</span>
+              <button onclick="addToCart(${p.id})"><i class="fas fa-plus" style="font-size:10px"></i></button>
+            </div>`
+          }
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function updateCtrl(id) {
+  const qty = cart[id] || 0;
+  const p = products.find(p => p.id === id);
+  const ctrl = document.getElementById('ctrl-' + id);
+  if (!ctrl) return;
+  if (qty === 0) {
+    ctrl.innerHTML = `<button class="add-btn" onclick="addToCart(${id})" ${!p.inStock ? 'disabled' : ''}><i class="fas fa-plus"></i> Add to Cart</button>`;
+  } else {
+    ctrl.innerHTML = `<div class="qty-ctrl">
+      <button onclick="removeFromCart(${id})"><i class="fas fa-minus" style="font-size:10px"></i></button>
+      <span>${qty}</span>
+      <button onclick="addToCart(${id})"><i class="fas fa-plus" style="font-size:10px"></i></button>
+    </div>`;
+  }
+}
+
+// ============================================================
+// CART
+// ============================================================
+function addToCart(id) {
+  cart[id] = (cart[id] || 0) + 1;
+  updateCtrl(id);
+  updateCartBadge();
+  renderCartDrawer();
+}
+function removeFromCart(id) {
+  if (!cart[id]) return;
+  cart[id]--;
+  if (cart[id] === 0) delete cart[id];
+  updateCtrl(id);
+  updateCartBadge();
+  renderCartDrawer();
+}
+function updateCartBadge() {
+  const total = Object.values(cart).reduce((a,b) => a+b, 0);
+  document.getElementById('cart-count').textContent = total;
+}
+function toggleCart() {
+  const drawer = document.getElementById('cart-drawer');
+  const overlay = document.getElementById('cart-overlay');
+  drawer.classList.toggle('open');
+  overlay.classList.toggle('open');
+  renderCartDrawer();
+}
+function renderCartDrawer() {
+  const body = document.getElementById('cart-body');
+  const foot = document.getElementById('cart-foot');
+  const keys = Object.keys(cart).filter(k => cart[k] > 0);
+
+  if (keys.length === 0) {
+    body.innerHTML = `<div class="cart-empty"><i class="fas fa-shopping-basket"></i><p>Your cart is empty</p><p style="font-size:13px">Add items from the shop</p></div>`;
+    foot.style.display = 'none';
+    return;
+  }
+
+  let total = 0;
+  body.innerHTML = keys.map(id => {
+    const p = products.find(pr => pr.id == id);
+    if (!p) return '';
+    const subtotal = p.price * cart[id];
+    total += subtotal;
+    return `
+      <div class="cart-item">
+        <div class="cart-item-icon">${p.icon}</div>
+        <div class="cart-item-info">
+          <div class="cart-item-name">${p.name}</div>
+          <div class="cart-item-price">₹${p.price.toLocaleString('en-IN')} × ${cart[id]}</div>
+        </div>
+        <div class="cart-item-right">
+          <div class="cart-item-total">₹${subtotal.toLocaleString('en-IN')}</div>
+          <div class="cart-item-qty">
+            <button onclick="removeFromCart(${p.id});renderCartDrawer()"><i class="fas fa-minus" style="font-size:9px"></i></button>
+            <span>${cart[id]}</span>
+            <button onclick="addToCart(${p.id});renderCartDrawer()"><i class="fas fa-plus" style="font-size:9px"></i></button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  document.getElementById('cart-total').textContent = '₹' + total.toLocaleString('en-IN');
+  foot.style.display = 'block';
+}
+function sendToWhatsApp() {
+  const keys = Object.keys(cart).filter(k => cart[k] > 0);
+  if (keys.length === 0) return alert('Please add items first!');
+  let total = 0;
+  let msg = 'Hi *LV Mart* (Laxmi Vinayaka Kiranam), I\'d like to order:\n\n';
+  keys.forEach(id => {
+    const p = products.find(pr => pr.id == id);
+    if (!p) return;
+    const sub = p.price * cart[id];
+    total += sub;
+    msg += `• ${p.name} × ${cart[id]} — ₹${sub.toLocaleString('en-IN')}\n`;
+  });
+  msg += `\n*Total: ₹${total.toLocaleString('en-IN')}*\n\nPlease confirm my order. Thank you!`;
+  window.open(`https://wa.me/919177547120?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+// ============================================================
+// ADMIN TABLE & STATS
+// ============================================================
+function renderAdminStats() {
+  const total = products.length;
+  const inStock = products.filter(p => p.inStock).length;
+  const avgPrice = Math.round(products.reduce((a,b) => a+b.price, 0) / total);
+  const cats = new Set(products.map(p => p.category)).size;
+  document.getElementById('admin-stats').innerHTML = `
+    <div class="stat-card"><div class="stat-label">Total Products</div><div class="stat-val">${total}</div></div>
+    <div class="stat-card"><div class="stat-label">In Stock</div><div class="stat-val green">${inStock}</div></div>
+    <div class="stat-card"><div class="stat-label">Out of Stock</div><div class="stat-val" style="color:var(--red)">${total-inStock}</div></div>
+    <div class="stat-card"><div class="stat-label">Categories</div><div class="stat-val gold">${cats}</div></div>
+    <div class="stat-card"><div class="stat-label">Avg. Price</div><div class="stat-val gold">₹${avgPrice}</div></div>
+  `;
+}
+
+function renderAdminTable() {
+  const tbody = document.getElementById('admin-tbody');
+  tbody.innerHTML = products.map(p => `
+    <tr>
+      <td class="td-icon">${p.icon}</td>
+      <td><div class="td-name">${p.name}</div><div class="td-cat">${p.category}</div></td>
+      <td>${p.category}</td>
+      <td class="td-price">₹${p.price.toLocaleString('en-IN')}</td>
+      <td>
+        <label class="switch">
+          <input type="checkbox" ${p.inStock ? 'checked' : ''} onchange="toggleStock(${p.id}, this.checked)">
+          <span class="slider-sw"></span>
+        </label>
+      </td>
+      <td>
+        <div class="td-actions">
+          <button class="action-btn edit" onclick="openModal(${p.id})"><i class="fas fa-edit"></i> Edit</button>
+          <button class="action-btn del" onclick="deleteProduct(${p.id})"><i class="fas fa-trash"></i></button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function toggleStock(id, val) {
+  const p = products.find(pr => pr.id === id);
+  if (p) { p.inStock = val; saveProducts(); renderAdminStats(); }
+}
+
+function deleteProduct(id) {
+  if (!confirm('Delete this product?')) return;
+  products = products.filter(p => p.id !== id);
+  saveProducts();
+  renderAdminTable();
+  renderAdminStats();
+  showToast('Product deleted');
+}
+
+// ============================================================
+// MODAL
+// ============================================================
+function openModal(id) {
+  editingId = id || null;
+  document.getElementById('modal-title').textContent = id ? 'Edit Product' : 'Add New Product';
+  if (id) {
+    const p = products.find(pr => pr.id === id);
+    document.getElementById('m-name').value = p.name;
+    document.getElementById('m-price').value = p.price;
+    document.getElementById('m-icon').value = p.icon;
+    document.getElementById('m-cat').value = p.category;
+    document.getElementById('m-stock').checked = p.inStock;
+  } else {
+    document.getElementById('m-name').value = '';
+    document.getElementById('m-price').value = '';
+    document.getElementById('m-icon').value = '';
+    document.getElementById('m-cat').value = 'Other';
+    document.getElementById('m-stock').checked = true;
+  }
+  document.getElementById('product-modal').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('product-modal').classList.remove('open');
+  editingId = null;
+}
+function saveProduct() {
+  const name = document.getElementById('m-name').value.trim();
+  const price = parseInt(document.getElementById('m-price').value);
+  const icon = document.getElementById('m-icon').value.trim() || '📦';
+  const category = document.getElementById('m-cat').value;
+  const inStock = document.getElementById('m-stock').checked;
+
+  if (!name || isNaN(price) || price < 0) {
+    alert('Please fill in product name and a valid price.'); return;
+  }
+  if (editingId) {
+    const p = products.find(pr => pr.id === editingId);
+    Object.assign(p, { name, price, icon, category, inStock });
+  } else {
+    const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
+    products.push({ id: newId, name, price, icon, category, inStock });
+  }
+  saveProducts();
+  closeModal();
+  renderAdminTable();
+  renderAdminStats();
+  showToast(editingId ? 'Product updated!' : 'Product added!');
+}
+
+function exportProducts() {
+  const lines = ['Name,Category,Price,In Stock'];
+  products.forEach(p => lines.push(`"${p.name}","${p.category}",${p.price},${p.inStock ? 'Yes' : 'No'}`));
+  const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'lvmart_products.csv';
+  a.click();
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = '✓ ' + msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ============================================================
+// INIT
+// ============================================================
+renderFilters();
+renderProducts();
+</script>
+</body>
+</html>
